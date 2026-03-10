@@ -13,48 +13,115 @@ const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Famalii',
-  description: 'Your unified family of financial apps',
+  title: 'Famalii — One identity, every app',
+  description: 'Your unified family of financial apps — Invest, Markets, Legal and more.',
+}
+
+const clerkAppearance = {
+  variables: {
+    colorBackground:      '#131318',
+    colorInputBackground: '#1a1a22',
+    colorInputText:       '#eeeef2',
+    colorText:            '#eeeef2',
+    colorTextSecondary:   '#8888a2',
+    colorPrimary:         '#f97316',
+    colorDanger:          '#ef4444',
+    borderRadius:         '0.75rem',
+    fontFamily:           'var(--font-geist-sans), system-ui, sans-serif',
+  },
+  elements: {
+    card:                      'shadow-2xl',
+    socialButtonsBlockButton:  'border-[#363645] bg-[#1a1a22] hover:bg-[#252530] text-[#eeeef2] transition-colors',
+    dividerLine:               'bg-[#252530]',
+    dividerText:               'text-[#525268]',
+    footerActionLink:          'text-[#f97316] hover:text-[#fb923c]',
+    formFieldInput:            'border-[#363645] focus:border-[#f97316] transition-colors',
+    headerTitle:               'text-[#eeeef2] font-bold',
+    headerSubtitle:            'text-[#8888a2]',
+    formButtonPrimary:         'bg-[#f97316] hover:bg-[#ea580c] transition-colors',
+  },
 }
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ClerkProvider>
-          <header className="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-white">
-            <a href="/" className="text-xl font-bold text-indigo-600 tracking-tight">
-              Famalii
-            </a>
-            <nav className="flex items-center gap-4">
-              <Show when="signed-in">
-                <a href="/dashboard" className="text-sm text-gray-600 hover:text-gray-900">
-                  Dashboard
-                </a>
-                <a href="/apps" className="text-sm text-gray-600 hover:text-gray-900">
-                  Apps
-                </a>
-                <UserButton />
-              </Show>
-              <Show when="signed-out">
-                <SignInButton>
-                  <button className="text-sm text-gray-700 hover:text-gray-900 px-3 py-1.5 border border-gray-300 rounded-md">
-                    Sign In
-                  </button>
-                </SignInButton>
-                <SignUpButton>
-                  <button className="text-sm text-white bg-indigo-600 hover:bg-indigo-700 px-3 py-1.5 rounded-md font-medium">
-                    Sign Up
-                  </button>
-                </SignUpButton>
-              </Show>
-            </nav>
+    <ClerkProvider appearance={clerkAppearance}>
+      <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+        <body className="antialiased min-h-screen bg-f-bg text-f-text">
+
+          {/* ── Top navigation ─────────────────────────────── */}
+          <header className="sticky top-0 z-50 border-b border-f-border bg-f-bg/80 backdrop-blur-xl">
+            <div className="max-w-6xl mx-auto flex items-center justify-between px-6 py-4">
+
+              {/* Logo */}
+              <a href="/" className="flex items-center gap-2.5 group">
+                <div className="w-8 h-8 rounded-lg bg-f-orange flex items-center justify-center shadow-lg group-hover:bg-f-orange-dark transition-colors">
+                  <span className="text-white font-black text-sm leading-none">F</span>
+                </div>
+                <span className="text-[15px] font-bold text-f-text tracking-tight">
+                  Famalii
+                </span>
+              </a>
+
+              {/* Nav links + auth */}
+              <nav className="flex items-center gap-1">
+                <Show when="signed-in">
+                  <a
+                    href="/dashboard"
+                    className="text-sm text-f-muted hover:text-f-text transition-colors px-3 py-2 rounded-lg hover:bg-f-raised"
+                  >
+                    Dashboard
+                  </a>
+                  <a
+                    href="/apps"
+                    className="text-sm text-f-muted hover:text-f-text transition-colors px-3 py-2 rounded-lg hover:bg-f-raised"
+                  >
+                    Apps
+                  </a>
+                  <div className="ml-2">
+                    <UserButton
+                      appearance={{
+                        variables: { colorPrimary: '#f97316' },
+                        elements: { avatarBox: 'ring-2 ring-f-border hover:ring-f-orange transition-all' },
+                      }}
+                    />
+                  </div>
+                </Show>
+
+                <Show when="signed-out">
+                  <SignInButton>
+                    <button className="text-sm text-f-muted hover:text-f-text transition-colors px-3 py-2 rounded-lg border border-f-border hover:border-f-border-bright">
+                      Sign in
+                    </button>
+                  </SignInButton>
+                  <SignUpButton>
+                    <button className="ml-1 text-sm text-white bg-f-orange hover:bg-f-orange-dark transition-colors px-4 py-2 rounded-lg font-semibold shadow-lg hover:shadow-orange-500/20">
+                      Get started
+                    </button>
+                  </SignUpButton>
+                </Show>
+              </nav>
+            </div>
           </header>
+
           <main>{children}</main>
-        </ClerkProvider>
-      </body>
-    </html>
+
+          {/* ── Footer ─────────────────────────────────────── */}
+          <footer className="border-t border-f-border mt-24 py-8 px-6">
+            <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-f-faint">
+              <div className="flex items-center gap-2">
+                <div className="w-5 h-5 rounded-md bg-f-orange flex items-center justify-center">
+                  <span className="text-white font-black text-[10px]">F</span>
+                </div>
+                <span>Famalii © {new Date().getFullYear()}</span>
+              </div>
+              <span>One identity. Every app.</span>
+            </div>
+          </footer>
+
+        </body>
+      </html>
+    </ClerkProvider>
   )
 }

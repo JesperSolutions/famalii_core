@@ -6,12 +6,26 @@ export default async function AppsPage() {
   const userId = await requireAuth()
   const apps = await getAppSwitcherData(userId)
 
+  const joinedCount = apps.filter(a => a.joined).length
+
   return (
-    <div className="max-w-4xl mx-auto py-10 px-6">
-      <h1 className="text-2xl font-bold text-gray-900 mb-1">Famalii Apps</h1>
-      <p className="text-gray-500 mb-8">
-        Browse all available apps. Click &quot;Add to my Famalii&quot; to join one.
-      </p>
+    <div className="max-w-6xl mx-auto px-6 py-12">
+
+      {/* Page header */}
+      <div className="mb-10">
+        <p className="text-xs uppercase tracking-widest text-f-orange font-semibold mb-2">
+          App catalogue
+        </p>
+        <h1 className="text-3xl sm:text-4xl font-black text-f-text mb-2 tracking-tight">
+          Famalii Apps
+        </h1>
+        <p className="text-f-muted">
+          {joinedCount === 0
+            ? 'Browse the full catalogue and add apps to your workspace.'
+            : `You've joined ${joinedCount} app${joinedCount > 1 ? 's' : ''}. Add more below.`}
+        </p>
+      </div>
+
       <AppSwitcher apps={apps} />
     </div>
   )

@@ -1,26 +1,73 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* ── Famalii colour tokens ──────────────────────────── */
+  --color-f-bg:            #0b0b0e;
+  --color-f-surface:       #131318;
+  --color-f-raised:        #1a1a22;
+  --color-f-elevated:      #22222c;
+  --color-f-border:        #252530;
+  --color-f-border-bright: #363645;
+
+  --color-f-orange:        #f97316;
+  --color-f-orange-light:  #fb923c;
+  --color-f-orange-dark:   #ea580c;
+
+  --color-f-text:          #eeeef2;
+  --color-f-muted:         #8888a2;
+  --color-f-faint:         #525268;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #0b0b0e;
+  color: #eeeef2;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Custom scrollbar ───────────────────────────────────── */
+::-webkit-scrollbar            { width: 6px; height: 6px; }
+::-webkit-scrollbar-track      { background: #0b0b0e; }
+::-webkit-scrollbar-thumb      { background: #252530; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover{ background: #363645; }
+
+/* ── Orange glow utility ────────────────────────────────── */
+.glow-orange {
+  box-shadow: 0 0 0 1px rgba(249,115,22,0.35), 0 0 20px rgba(249,115,22,0.12);
+}
+
+/* ── Dot-grid hero pattern ──────────────────────────────── */
+.dot-grid {
+  background-image: radial-gradient(circle, rgba(249,115,22,0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* ── Fade animations ────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up            { animation: fadeUp 0.5s ease forwards; }
+.animate-fade-up-delay-1    { animation: fadeUp 0.5s ease 0.1s both; }
+.animate-fade-up-delay-2    { animation: fadeUp 0.5s ease 0.2s both; }
+.animate-fade-up-delay-3    { animation: fadeUp 0.5s ease 0.35s both; }
+
+/* ── Card hover lift ─────────────────────────────────────── */
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-2px);
 }
