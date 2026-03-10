@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^7.0.2",
+    "@clerk/ui": "^1.1.0",
     "@prisma/client": "^6.19.2",
     "@prisma/extension-accelerate": "^2.0.2",
     "dotenv": "^17.3.1",
