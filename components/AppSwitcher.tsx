@@ -11,9 +11,12 @@ interface Props {
 export function AppSwitcher({ apps }: Props) {
   const router = useRouter()
   const [joiningSlug, setJoiningSlug] = useState<string | null>(null)
+  const [errorSlug, setErrorSlug] = useState<string | null>(null)
+  const [errorMsg, setErrorMsg] = useState<string>('')
 
   async function handleJoin(slug: string) {
     setJoiningSlug(slug)
+    setErrorSlug(null)
     try {
       const res = await fetch('/api/apps/join', {
         method: 'POST',
@@ -22,7 +25,8 @@ export function AppSwitcher({ apps }: Props) {
       })
       if (!res.ok) {
         const data = await res.json()
-        alert(data.error ?? 'Failed to join app')
+        setErrorSlug(slug)
+        setErrorMsg(data.error ?? 'Failed to join app')
         return
       }
       router.refresh()
@@ -83,10 +87,19 @@ export function AppSwitcher({ apps }: Props) {
             {app.description}
           </p>
 
+          {/* Inline error */}
+          {errorSlug === app.slug && (
+            <p className="text-xs text-red-400 bg-red-400/10 border border-red-400/20 rounded-lg px-3 py-2">
+              {errorMsg}
+            </p>
+          )}
+
           {/* Action */}
           {app.joined ? (
             <a
-              href={`/apps/${app.slug}`}
+              href={app.launchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="mt-auto inline-flex items-center justify-center gap-1.5 bg-f-orange hover:bg-f-orange-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-orange-500/25"
             >
               Open app

@@ -21,7 +21,10 @@ export async function listAvailableAppsForUser(
   userId: string,
 ): Promise<AppWithMembershipStatus[]> {
   const [apps, memberships] = await Promise.all([
-    prisma.app.findMany({ where: { isActive: true }, orderBy: { name: 'asc' } }),
+    prisma.app.findMany({
+      where: { isActive: true, NOT: { slug: 'famalii-core' } },
+      orderBy: { name: 'asc' },
+    }),
     prisma.userAppMembership.findMany({
       where: { userId },
       select: { appId: true, role: true },
