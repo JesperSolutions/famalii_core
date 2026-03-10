@@ -6,6 +6,7 @@ import {
   SignUpButton,
   UserButton,
 } from '@clerk/nextjs'
+import { ui } from '@clerk/ui'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 
@@ -46,7 +47,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider appearance={clerkAppearance}>
+    <ClerkProvider appearance={clerkAppearance} ui={ui}>
       <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
         <body className="antialiased min-h-screen bg-f-bg text-f-text flex flex-col">
 

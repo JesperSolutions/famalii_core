@@ -9,7 +9,8 @@ async function main() {
       slug: 'famalii-core',
       name: 'Famalii Core',
       description: 'The central hub for your Famalii workspace. Manage your profile, apps, and settings.',
-      launchUrl: 'http://localhost:3000',
+      launchUrl: 'https://famalii-core.vercel.app',
+      isActive: true,
     },
     {
       slug: 'famalii-invest',
@@ -21,13 +22,15 @@ async function main() {
       slug: 'famalii-markets',
       name: 'Famalii Markets',
       description: 'Real-time market data, watchlists, and financial news in one place.',
-      launchUrl: 'https://markets.famalii.com',
+      launchUrl: 'https://famalii-core.vercel.app/apps',
+      isActive: false, // not yet deployed
     },
     {
       slug: 'famalii-legal',
       name: 'Famalii Legal',
       description: 'Document management, contract templates, and legal resources for your family.',
-      launchUrl: 'https://legal.famalii.com',
+      launchUrl: 'https://famalii-core.vercel.app/apps',
+      isActive: false, // not yet deployed
     },
   ]
 
@@ -35,7 +38,7 @@ async function main() {
     await prisma.app.upsert({
       where: { slug: app.slug },
       create: app,
-      update: { name: app.name, description: app.description, launchUrl: app.launchUrl },
+      update: { name: app.name, description: app.description, launchUrl: app.launchUrl, isActive: app.isActive ?? true },
     })
     console.log(`✓ Upserted app: ${app.slug}`)
   }
