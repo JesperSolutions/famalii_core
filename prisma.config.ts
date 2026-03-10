@@ -9,4 +9,7 @@ export default defineConfig({
   migrations: {
     path: 'prisma/migrations',
   },
+  seed: {
+    run: 'tsx prisma/seed.ts',
+  },
 })
