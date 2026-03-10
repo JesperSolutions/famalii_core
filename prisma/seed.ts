@@ -15,7 +15,7 @@ async function main() {
       slug: 'famalii-invest',
       name: 'Famalii Invest',
       description: 'Track your investment portfolio, analyze performance, and explore new opportunities.',
-      launchUrl: 'https://invest.famalii.com',
+      launchUrl: 'https://famaliiinvest.vercel.app',
     },
     {
       slug: 'famalii-markets',

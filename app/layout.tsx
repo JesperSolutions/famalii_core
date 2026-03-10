@@ -1,8 +1,7 @@
 import type { Metadata } from 'next'
 import {
   ClerkProvider,
-  SignedIn,
-  SignedOut,
+  Show,
   SignInButton,
   SignUpButton,
   UserButton,
@@ -49,7 +48,7 @@ export default function RootLayout({
   return (
     <ClerkProvider appearance={clerkAppearance}>
       <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
-        <body className="antialiased min-h-screen bg-f-bg text-f-text">
+        <body className="antialiased min-h-screen bg-f-bg text-f-text flex flex-col">
 
           {/* ── Top navigation ─────────────────────────────── */}
           <header className="sticky top-0 z-50 border-b border-f-border bg-f-bg/80 backdrop-blur-xl">
@@ -67,7 +66,7 @@ export default function RootLayout({
 
               {/* Nav links + auth */}
               <nav className="flex items-center gap-1">
-                <SignedIn>
+                <Show when="signed-in">
                   <a
                     href="/dashboard"
                     className="text-sm text-f-muted hover:text-f-text transition-colors px-3 py-2 rounded-lg hover:bg-f-raised"
@@ -88,9 +87,9 @@ export default function RootLayout({
                       }}
                     />
                   </div>
-              </SignedIn>
+              </Show>
 
-                <SignedOut>
+                <Show when="signed-out">
                   <SignInButton>
                     <button className="text-sm text-f-muted hover:text-f-text transition-colors px-3 py-2 rounded-lg border border-f-border hover:border-f-border-bright">
                       Sign in
@@ -106,7 +105,7 @@ export default function RootLayout({
             </div>
           </header>
 
-          <main>{children}</main>
+          <main className="flex-1">{children}</main>
 
           {/* ── Footer ─────────────────────────────────────── */}
           <footer className="border-t border-f-border mt-24 py-8 px-6">
