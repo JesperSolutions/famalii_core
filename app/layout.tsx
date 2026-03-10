@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import {
   ClerkProvider,
-  Show,
+  SignedIn,
+  SignedOut,
   SignInButton,
   SignUpButton,
   UserButton,
@@ -66,7 +67,7 @@ export default function RootLayout({
 
               {/* Nav links + auth */}
               <nav className="flex items-center gap-1">
-                <Show when="signed-in">
+                <SignedIn>
                   <a
                     href="/dashboard"
                     className="text-sm text-f-muted hover:text-f-text transition-colors px-3 py-2 rounded-lg hover:bg-f-raised"
@@ -87,9 +88,9 @@ export default function RootLayout({
                       }}
                     />
                   </div>
-                </Show>
+              </SignedIn>
 
-                <Show when="signed-out">
+                <SignedOut>
                   <SignInButton>
                     <button className="text-sm text-f-muted hover:text-f-text transition-colors px-3 py-2 rounded-lg border border-f-border hover:border-f-border-bright">
                       Sign in
