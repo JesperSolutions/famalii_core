@@ -140,7 +140,7 @@ export default function HomePage() {
             {[
               { step: '01', title: 'Create one account', body: 'Sign up once with your email. No separate logins per app.' },
               { step: '02', title: 'Join the apps you need', body: 'Browse the catalogue and add Invest, Markets, or Legal to your workspace.' },
-              { step: '03', title: 'Launch instantly', body: 'Your Famalii account carries your identity and access to every app you've joined.' },
+              { step: '03', title: 'Launch instantly', body: "Your Famalii account carries your identity and access to every app you've joined." },
             ].map(({ step, title, body }) => (
               <div key={step} className="rounded-2xl border border-f-border bg-f-raised p-8">
                 <p className="text-4xl font-black text-f-orange/20 mb-4 font-mono">{step}</p>
