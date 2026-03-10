@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import { listAvailableAppsForUser } from './auth/listAvailableAppsForUser'
 import type { Role } from '@prisma/client'
 
@@ -15,8 +16,10 @@ export type AppSwitcherItem = {
 /**
  * Returns a combined data structure suitable for rendering an App Switcher menu.
  * Each entry includes join status and role so the UI can grey out unjoined apps.
+ * Wrapped in React.cache() so multiple server components in the same render pass
+ * share one DB round-trip.
  */
-export async function getAppSwitcherData(userId: string): Promise<AppSwitcherItem[]> {
+export const getAppSwitcherData = cache(async (userId: string): Promise<AppSwitcherItem[]> => {
   const apps = await listAvailableAppsForUser(userId)
 
   return apps.map((app) => ({
@@ -29,4 +32,4 @@ export async function getAppSwitcherData(userId: string): Promise<AppSwitcherIte
     launchUrl: app.launchUrl,
     isActive: app.isActive,
   }))
-}
+})

@@ -45,6 +45,8 @@ model App {
 
   memberships UserAppMembership[]
   auditLogs   AuditLog[]
+
+  @@index([isActive])
 }
 
 // Junction table: which users have joined which apps, and at what role.

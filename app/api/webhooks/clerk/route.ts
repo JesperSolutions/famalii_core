@@ -40,7 +40,8 @@ export async function POST(req: Request) {
       'svix-timestamp': svixTimestamp,
       'svix-signature': svixSignature,
     }) as typeof event
-  } catch {
+  } catch (err) {
+    console.error('Webhook signature verification failed:', err)
     return new NextResponse('Invalid webhook signature', { status: 400 })
   }
 
@@ -56,19 +57,21 @@ export async function POST(req: Request) {
       return new NextResponse('No primary email on user', { status: 422 })
     }
 
-    await prisma.user.create({
-      data: {
-        id: data.id,
-        email: primaryEmail,
-        firstName: data.first_name,
-        lastName: data.last_name,
-        imageUrl: data.image_url,
-      },
-    })
-
-    await prisma.auditLog.create({
-      data: { userId: data.id, action: 'user.created' },
-    })
+    // Atomic: user row + audit log succeed or fail together
+    await prisma.$transaction([
+      prisma.user.create({
+        data: {
+          id: data.id,
+          email: primaryEmail,
+          firstName: data.first_name,
+          lastName: data.last_name,
+          imageUrl: data.image_url,
+        },
+      }),
+      prisma.auditLog.create({
+        data: { userId: data.id, action: 'user.created' },
+      }),
+    ])
   }
 
   if (type === 'user.updated') {
@@ -95,12 +98,14 @@ export async function POST(req: Request) {
   }
 
   if (type === 'user.deleted') {
-    // Cascade delete via Prisma (memberships and audit entries handled by schema)
-    await prisma.user.deleteMany({ where: { id: data.id } })
-
-    await prisma.auditLog.create({
-      data: { userId: data.id, action: 'user.deleted' },
-    })
+    // Log before deletion; userId FK cannot reference a deleted user, so store
+    // the deleted ID in metadata and delete the user atomically.
+    await prisma.$transaction([
+      prisma.auditLog.create({
+        data: { userId: null, action: 'user.deleted', metadata: { deletedUserId: data.id } },
+      }),
+      prisma.user.deleteMany({ where: { id: data.id } }),
+    ])
   }
 
   return NextResponse.json({ received: true })

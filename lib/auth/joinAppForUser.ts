@@ -38,24 +38,29 @@ export async function joinAppForUser(userId: string, appSlug: string) {
 
   if (!app) throw new Error(`App "${appSlug}" not found or is inactive`)
 
-  const membership = await prisma.userAppMembership.upsert({
-    where: { userId_appId: { userId, appId: app.id } },
-    create: { userId, appId: app.id, role: Role.MEMBER },
-    update: {}, // already a member — no changes
-    include: { app: true },
-  })
-
-  // Append audit entry only on first join
-  if (membership.joinedAt.getTime() === membership.updatedAt.getTime()) {
-    await prisma.auditLog.create({
-      data: {
-        userId,
-        appSlug,
-        action: 'app.joined',
-        metadata: { appId: app.id, role: Role.MEMBER },
-      },
+  // Interactive transaction: membership upsert + conditional audit log are atomic
+  const membership = await prisma.$transaction(async (tx) => {
+    const m = await tx.userAppMembership.upsert({
+      where: { userId_appId: { userId, appId: app.id } },
+      create: { userId, appId: app.id, role: Role.MEMBER },
+      update: {}, // already a member — no changes
+      include: { app: true },
     })
-  }
+
+    // Append audit entry only on first join
+    if (m.joinedAt.getTime() === m.updatedAt.getTime()) {
+      await tx.auditLog.create({
+        data: {
+          userId,
+          appSlug,
+          action: 'app.joined',
+          metadata: { appId: app.id, role: Role.MEMBER },
+        },
+      })
+    }
+
+    return m
+  })
 
   return membership
 }

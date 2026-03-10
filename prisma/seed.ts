@@ -34,14 +34,16 @@ async function main() {
     },
   ]
 
-  for (const app of apps) {
-    await prisma.app.upsert({
-      where: { slug: app.slug },
-      create: app,
-      update: { name: app.name, description: app.description, launchUrl: app.launchUrl, isActive: app.isActive ?? true },
-    })
-    console.log(`✓ Upserted app: ${app.slug}`)
-  }
+  await prisma.$transaction(
+    apps.map((app) =>
+      prisma.app.upsert({
+        where: { slug: app.slug },
+        create: app,
+        update: { name: app.name, description: app.description, launchUrl: app.launchUrl, isActive: app.isActive ?? true },
+      })
+    )
+  )
+  console.log(`✓ Upserted ${apps.length} apps`)
 }
 
 main()
