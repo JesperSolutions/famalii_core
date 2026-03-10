@@ -32,6 +32,32 @@ export default async function DashboardPage() {
         </p>
       </div>
 
+      {/* ── Quick launch strip (joined apps only) ─────────── */}
+      {apps.filter(a => a.joined).length > 0 && (
+        <div className="mb-10">
+          <p className="text-xs uppercase tracking-widest text-f-faint font-semibold mb-3">Quick launch</p>
+          <div className="flex flex-wrap gap-3">
+            {apps.filter(a => a.joined).map((app) => (
+              <a
+                key={app.slug}
+                href={app.launchUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2.5 rounded-xl border border-f-orange/30 bg-f-orange/5 hover:bg-f-orange/10 hover:border-f-orange/50 px-4 py-2.5 transition-all group"
+              >
+                <div className="w-7 h-7 rounded-lg bg-f-orange flex items-center justify-center text-white text-xs font-black flex-shrink-0">
+                  {app.iconPlaceholder}
+                </div>
+                <span className="text-sm font-semibold text-f-text">{app.name}</span>
+                <svg className="text-f-faint group-hover:text-f-orange transition-colors" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
+                  <path d="M4 4h8v8M4 12L12 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* ── Stats row ─────────────────────────────────────────── */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-12">
         {[
