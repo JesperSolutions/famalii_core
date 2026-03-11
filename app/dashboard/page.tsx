@@ -3,6 +3,7 @@ import { requireAuth } from '@/lib/auth/requireAuth'
 import { getCurrentUser } from '@/lib/auth/getCurrentUser'
 import { AppsSection, AppsSkeleton } from '@/components/AppsSection'
 import { ActivityFeedSection } from '@/components/ActivityFeedSection'
+import { AppFeedSection, AppFeedSkeleton } from '@/components/AppFeedSection'
 
 function getGreeting() {
   const h = new Date().getHours()
@@ -45,8 +46,13 @@ export default async function DashboardPage() {
         <AppsSection userId={userId} />
       </Suspense>
 
-      {/* ── Activity feed streams in ─────────────────────── */}
-      <Suspense fallback={<div className="mt-16 h-40 rounded-2xl border border-f-border bg-f-surface animate-pulse" />}>
+      {/* ── App updates feed streams in ──────────────────────────── */}
+      <Suspense fallback={<AppFeedSkeleton />}>
+        <AppFeedSection userId={userId} />
+      </Suspense>
+
+      {/* ── Activity log streams in ──────────────────────────────── */}
+      <Suspense fallback={<div className="mt-14 h-40 rounded-2xl border border-f-border bg-f-surface animate-pulse" />}>
         <ActivityFeedSection userId={userId} />
       </Suspense>
     </div>

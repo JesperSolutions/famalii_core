@@ -45,6 +45,7 @@ model App {
 
   memberships UserAppMembership[]
   auditLogs   AuditLog[]
+  updates     AppUpdate[]
 
   @@index([isActive])
 }
@@ -80,4 +81,19 @@ model AuditLog {
 
   @@index([userId])
   @@index([action])
+}
+
+// App-published news items shown in the dashboard feed.
+model AppUpdate {
+  id          String   @id @default(cuid())
+  appSlug     String
+  title       String
+  body        String
+  category    String   @default("Update")  // e.g. "Feature", "Fix", "Security", "Market"
+  publishedAt DateTime @default(now())
+
+  app App @relation(fields: [appSlug], references: [slug], onDelete: Cascade)
+
+  @@index([appSlug])
+  @@index([publishedAt])
 }
