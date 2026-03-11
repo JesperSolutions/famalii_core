@@ -29,8 +29,8 @@ async function main() {
       slug: 'famalii-legal',
       name: 'Famalii Legal',
       description: 'Document management, contract templates, and legal resources for your family.',
-      launchUrl: 'https://famalii-core.vercel.app/apps',
-      isActive: false, // not yet deployed
+      launchUrl: 'https://famalii-legal.vercel.app',
+      isActive: true,
     },
   ]
 
