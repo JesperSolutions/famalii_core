@@ -7,11 +7,13 @@ function formatAction(action: string, appSlug: string | null): string {
     case 'user.deleted': return 'Account closed'
     case 'app.joined': {
       if (!appSlug) return 'Joined an app'
-      const pretty = appSlug
-        .replace('famalii-', '')
-        .replace(/-/g, ' ')
-        .replace(/\b\w/g, c => c.toUpperCase())
+      const pretty = appSlug.replace('famalii-', '').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
       return `Joined Famalii ${pretty}`
+    }
+    case 'app.left': {
+      if (!appSlug) return 'Left an app'
+      const pretty = appSlug.replace('famalii-', '').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
+      return `Left Famalii ${pretty}`
     }
     default: return action.replace(/\./g, ' ')
   }
@@ -29,10 +31,20 @@ function relativeTime(date: Date): string {
   return `${Math.floor(days / 30)}mo ago`
 }
 
-const ACTION_ICON: Record<string, { bg: string; icon: string }> = {
-  'user.created': { bg: 'bg-emerald-500/10 border-emerald-500/20', icon: 'text-emerald-400' },
-  'user.updated': { bg: 'bg-blue-500/10 border-blue-500/20',       icon: 'text-blue-400'   },
-  'app.joined':   { bg: 'bg-f-orange/10 border-f-orange/20',       icon: 'text-f-orange'   },
+const ACTION_STYLE: Record<string, { dot: string; bg: string; ring: string }> = {
+  'user.created': { dot: 'bg-emerald-400', bg: 'bg-emerald-500/10', ring: 'ring-1 ring-emerald-500/20' },
+  'user.updated': { dot: 'bg-blue-400',    bg: 'bg-blue-500/10',    ring: 'ring-1 ring-blue-500/20'    },
+  'app.joined':   { dot: 'bg-f-orange',    bg: 'bg-f-orange/10',    ring: 'ring-1 ring-f-orange/20'    },
+  'app.left':     { dot: 'bg-red-400',     bg: 'bg-red-500/10',     ring: 'ring-1 ring-red-500/20'     },
+}
+
+const APP_BADGE: Record<string, string> = {
+  'famalii-invest': 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+  'famalii-legal':  'bg-violet-500/10  text-violet-400  border-violet-500/20',
+}
+
+function getAppLabel(slug: string): string {
+  return slug.replace('famalii-', '').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 }
 
 export async function ActivityFeedSection({ userId }: { userId: string }) {
@@ -46,33 +58,57 @@ export async function ActivityFeedSection({ userId }: { userId: string }) {
   if (entries.length === 0) return null
 
   return (
-    <div className="mt-16">
-      <h2 className="text-lg font-bold text-f-text mb-6">Recent activity</h2>
-      <div className="rounded-2xl border border-f-border overflow-hidden divide-y divide-f-border">
-        {entries.map((e) => {
-          const style = ACTION_ICON[e.action] ?? { bg: 'bg-f-raised border-f-border', icon: 'text-f-faint' }
-          return (
-            <div
-              key={e.id}
-              className="flex items-center justify-between px-5 py-4 bg-f-surface hover:bg-f-raised transition-colors"
-            >
-              <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full border flex items-center justify-center flex-shrink-0 ${style.bg}`}>
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" className={style.icon}>
-                    <path d="M3 8l3.5 3.5L13 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </div>
-                <span className="text-sm text-f-text font-medium">
-                  {formatAction(e.action, e.appSlug)}
-                </span>
-              </div>
-              <span className="text-xs text-f-faint tabular-nums shrink-0 ml-4">
-                {relativeTime(e.createdAt)}
-              </span>
-            </div>
-          )
-        })}
+    <section className="mt-16">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-lg font-bold text-f-text">Activity log</h2>
+        <span className="text-xs text-f-faint bg-f-raised border border-f-border px-2.5 py-1 rounded-full">
+          {entries.length} event{entries.length !== 1 ? 's' : ''}
+        </span>
       </div>
-    </div>
+
+      <div className="rounded-2xl border border-f-border bg-f-surface overflow-hidden">
+        <div className="relative">
+          {/* Vertical timeline connector */}
+          <div className="absolute left-[2.875rem] top-0 bottom-0 w-px bg-f-border pointer-events-none" aria-hidden />
+
+          {entries.map((e, i) => {
+            const s = ACTION_STYLE[e.action] ?? { dot: 'bg-f-faint', bg: 'bg-f-raised', ring: 'ring-1 ring-f-border' }
+            return (
+              <div
+                key={e.id}
+                className={`flex items-start gap-4 px-5 py-4 hover:bg-f-raised/50 transition-colors ${
+                  i < entries.length - 1 ? 'border-b border-f-border' : ''
+                }`}
+              >
+                {/* Timeline dot */}
+                <div className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${s.bg} ${s.ring}`}>
+                  <span className={`w-2.5 h-2.5 rounded-full ${s.dot}`} />
+                </div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0 pt-0.5">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-sm text-f-text font-medium">{formatAction(e.action, e.appSlug)}</span>
+                    {e.appSlug && (
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full border font-medium ${
+                        APP_BADGE[e.appSlug] ?? 'bg-f-raised text-f-faint border-f-border'
+                      }`}>
+                        {getAppLabel(e.appSlug)}
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-f-faint mt-0.5 tabular-nums">{relativeTime(e.createdAt)}</p>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="px-5 py-3 border-t border-f-border bg-f-raised/40 flex items-center justify-between">
+          <p className="text-xs text-f-faint">Showing last {entries.length} events</p>
+          <p className="text-xs text-f-faint">Full audit log coming soon</p>
+        </div>
+      </div>
+    </section>
   )
 }

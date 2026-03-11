@@ -1,75 +1,79 @@
 import { getAppSwitcherData } from '@/lib/appSwitcher'
 import { AppSwitcher } from '@/components/AppSwitcher'
 
-/**
- * Async server component that owns the apps data fetch.
- * Wrapped in <Suspense> by the dashboard page so the header renders immediately
- * while this section streams in.
- */
 export async function AppsSection({ userId }: { userId: string }) {
   const apps = await getAppSwitcherData(userId)
   const joinedCount = apps.filter(a => a.joined).length
   const totalCount  = apps.length
+  const joinedApps  = apps.filter(a => a.joined)
 
   return (
     <>
-      {/* Dynamic subtitle */}
-      <p className="text-f-muted mb-10">
-        {joinedCount === 0
-          ? "You haven't joined any apps yet — browse the catalogue below to get started."
-          : `You have access to ${joinedCount} of ${totalCount} Famalii apps.`}
-      </p>
+      {/* ── Stats row ──────────────────────────────────────── */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-10">
 
-      {/* Quick launch strip */}
-      {joinedCount > 0 && (
+        {/* Accent — apps joined */}
+        <div className="relative overflow-hidden rounded-2xl border border-f-orange/25 bg-f-surface p-5">
+          <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-f-orange/15 blur-2xl pointer-events-none" />
+          <p className="text-xs text-f-muted font-medium mb-2">Apps joined</p>
+          <p className="text-3xl font-black text-f-orange tabular-nums">{joinedCount}</p>
+          <p className="text-xs text-f-faint mt-1">of {totalCount} available</p>
+        </div>
+
+        {/* Account status */}
+        <div className="rounded-2xl border border-f-border bg-f-surface p-5">
+          <p className="text-xs text-f-muted font-medium mb-2">Account status</p>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-sm shadow-emerald-500/50" />
+            <p className="text-xl font-black text-emerald-400">Active</p>
+          </div>
+          <p className="text-xs text-f-faint">All systems operational</p>
+        </div>
+
+        {/* Catalogue size */}
+        <div className="col-span-2 sm:col-span-1 rounded-2xl border border-f-border bg-f-surface p-5">
+          <p className="text-xs text-f-muted font-medium mb-2">Apps available</p>
+          <p className="text-3xl font-black text-f-text tabular-nums">{totalCount}</p>
+          <p className="text-xs text-f-faint mt-1">Explore the catalogue</p>
+        </div>
+      </div>
+
+      {/* ── Quick launch ───────────────────────────────────── */}
+      {joinedApps.length > 0 ? (
         <div className="mb-10">
           <p className="text-xs uppercase tracking-widest text-f-faint font-semibold mb-3">Quick launch</p>
-          <div className="flex flex-wrap gap-3">
-            {apps.filter(a => a.joined).map((app) => (
+          <div className="flex flex-wrap gap-2.5">
+            {joinedApps.map((app) => (
               <a
                 key={app.slug}
                 href={app.launchUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2.5 rounded-xl border border-f-orange/30 bg-f-orange/5 hover:bg-f-orange/10 hover:border-f-orange/50 px-4 py-2.5 transition-all group"
+                className="group flex items-center gap-2.5 rounded-xl border border-f-border bg-f-surface hover:border-f-orange/40 hover:bg-f-orange/5 px-4 py-2.5 transition-all"
               >
-                <div className="w-7 h-7 rounded-lg bg-f-orange flex items-center justify-center text-white text-xs font-black flex-shrink-0">
+                <div className="w-6 h-6 rounded-md bg-f-orange flex items-center justify-center text-white text-[11px] font-black flex-shrink-0 shadow-sm shadow-orange-500/30">
                   {app.iconPlaceholder}
                 </div>
-                <span className="text-sm font-semibold text-f-text">{app.name}</span>
-                <svg className="text-f-faint group-hover:text-f-orange transition-colors" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
+                <span className="text-sm font-semibold text-f-muted group-hover:text-f-text transition-colors">{app.name}</span>
+                <svg className="text-f-faint group-hover:text-f-orange transition-colors" width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden>
                   <path d="M4 4h8v8M4 12L12 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </a>
             ))}
           </div>
         </div>
+      ) : (
+        <p className="text-sm text-f-muted mb-10">
+          You haven't joined any apps yet — browse the catalogue below to get started.
+        </p>
       )}
 
-      {/* Stats row */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-12">
-        {[
-          { label: 'Apps joined',    value: joinedCount, accent: true },
-          { label: 'Apps available', value: totalCount },
-          { label: 'Account status', value: 'Active', isText: true },
-        ].map(({ label, value, accent, isText }) => (
-          <div
-            key={label}
-            className={`rounded-xl border p-5 ${
-              accent ? 'border-f-orange/30 bg-f-orange/5' : 'border-f-border bg-f-surface'
-            }`}
-          >
-            <p className="text-xs text-f-muted mb-1">{label}</p>
-            <p className={`text-2xl font-black ${accent ? 'text-f-orange' : isText ? 'text-emerald-400' : 'text-f-text'}`}>
-              {value}
-            </p>
-          </div>
-        ))}
-      </div>
-
-      {/* App grid */}
+      {/* ── App grid header ────────────────────────────────── */}
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-f-text">Your apps</h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-base font-bold text-f-text">All apps</h2>
+          <span className="text-xs text-f-faint bg-f-raised border border-f-border px-2 py-0.5 rounded-full">{totalCount}</span>
+        </div>
         <a
           href="/apps"
           className="text-sm text-f-orange hover:text-f-orange-light transition-colors flex items-center gap-1"
@@ -86,20 +90,23 @@ export async function AppsSection({ userId }: { userId: string }) {
   )
 }
 
-/** Skeleton shown while AppsSection is loading */
 export function AppsSkeleton() {
   return (
     <div className="animate-pulse">
-      <div className="h-4 w-72 bg-f-raised rounded mb-10" />
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-12">
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-10">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="rounded-xl border border-f-border bg-f-surface h-[76px]" />
+          <div key={i} className="rounded-2xl border border-f-border bg-f-surface h-24" />
+        ))}
+      </div>
+      <div className="flex gap-2.5 mb-10">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="rounded-xl border border-f-border bg-f-surface h-10 w-32" />
         ))}
       </div>
       <div className="h-6 w-24 bg-f-raised rounded mb-6" />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="rounded-2xl border border-f-border bg-f-surface h-48" />
+          <div key={i} className="rounded-2xl border border-f-border bg-f-surface h-52" />
         ))}
       </div>
     </div>

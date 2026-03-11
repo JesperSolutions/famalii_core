@@ -133,21 +133,25 @@ export function AppSwitcher({ apps: initialApps }: Props) {
         {apps.map((app) => (
           <div
             key={app.slug}
-            className={`card-hover group relative rounded-2xl border p-5 flex flex-col gap-4 transition-all ${
+            className={`card-hover group relative rounded-2xl border flex flex-col overflow-hidden transition-all ${
               app.joined
-                ? 'border-f-orange/40 bg-f-surface glow-orange'
+                ? 'border-f-orange/30 bg-f-surface'
                 : 'border-f-border bg-f-surface hover:border-f-border-bright'
             }`}
           >
-            {/* Joined indicator + remove button */}
+            {/* Joined top accent line */}
             {app.joined && (
-              <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-f-orange shadow-lg shadow-orange-500/50" />
+              <div className="h-px w-full bg-gradient-to-r from-transparent via-f-orange to-transparent opacity-70" />
+            )}
+
+            <div className="p-5 flex flex-col gap-4 flex-1">
+              {/* Remove button */}
+              {app.joined && (
                 <button
                   onClick={() => handleLeave(app.slug)}
                   disabled={leavingSlug === app.slug}
                   title={`Remove ${app.name} from your workspace`}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity w-5 h-5 rounded-md flex items-center justify-center text-f-faint hover:text-red-400 hover:bg-red-500/10 disabled:opacity-30"
+                  className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity w-6 h-6 rounded-md flex items-center justify-center text-f-faint hover:text-red-400 hover:bg-red-500/10 disabled:opacity-30"
                 >
                   {leavingSlug === app.slug ? (
                     <svg className="animate-spin" width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden>
@@ -160,74 +164,75 @@ export function AppSwitcher({ apps: initialApps }: Props) {
                     </svg>
                   )}
                 </button>
-              </div>
-            )}
+              )}
 
-            {/* Icon + name */}
-            <div className="flex items-center gap-3">
-              <div
-                className={`w-11 h-11 rounded-xl flex items-center justify-center text-lg font-black flex-shrink-0 transition-all ${
-                  app.joined
-                    ? 'bg-f-orange text-white shadow-md shadow-orange-500/20'
-                    : 'bg-f-raised text-f-muted border border-f-border group-hover:text-f-text group-hover:border-f-border-bright'
-                }`}
-              >
-                {app.iconPlaceholder}
+              {/* Icon + name */}
+              <div className="flex items-center gap-3">
+                <div
+                  className={`w-12 h-12 rounded-xl flex items-center justify-center text-base font-black flex-shrink-0 transition-all ${
+                    app.joined
+                      ? 'bg-gradient-to-br from-f-orange to-f-orange-dark text-white shadow-lg shadow-orange-500/20'
+                      : 'bg-f-raised text-f-muted border border-f-border group-hover:border-f-border-bright group-hover:text-f-text'
+                  }`}
+                >
+                  {app.iconPlaceholder}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-bold text-f-text text-sm truncate">{app.name}</p>
+                  {app.joined && app.role ? (
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-f-orange" />
+                      <span className="text-xs text-f-orange font-medium capitalize">{app.role.toLowerCase()}</span>
+                    </div>
+                  ) : (
+                    <p className="text-xs text-f-faint mt-0.5">Not joined</p>
+                  )}
+                </div>
               </div>
-              <div className="min-w-0">
-                <p className="font-bold text-f-text text-sm truncate">{app.name}</p>
-                {app.joined && app.role ? (
-                  <p className="text-xs text-f-orange font-medium capitalize">
-                    {app.role.toLowerCase()}
-                  </p>
-                ) : (
-                  <p className="text-xs text-f-faint">Not joined</p>
-                )}
-              </div>
+
+              {/* Description */}
+              <p className="text-xs text-f-muted leading-relaxed flex-1 line-clamp-3">
+                {app.description}
+              </p>
+
+              {/* Action */}
+              {app.joined ? (
+                <a
+                  href={app.launchUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-auto w-full inline-flex items-center justify-center gap-1.5 bg-f-orange hover:bg-f-orange-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-orange-500/30"
+                >
+                  Open app
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </a>
+              ) : (
+                <button
+                  onClick={() => handleJoin(app.slug)}
+                  disabled={joiningSlug === app.slug}
+                  className="mt-auto w-full inline-flex items-center justify-center gap-1.5 border border-f-border-bright hover:border-f-orange/50 hover:bg-f-orange/5 text-f-muted hover:text-f-orange text-xs font-semibold px-4 py-2.5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                >
+                  {joiningSlug === app.slug ? (
+                    <>
+                      <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" />
+                        <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                      </svg>
+                      Joining…
+                    </>
+                  ) : (
+                    <>
+                      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
+                        <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                      </svg>
+                      Add to Famalii
+                    </>
+                  )}
+                </button>
+              )}
             </div>
-
-            {/* Description */}
-            <p className="text-xs text-f-muted leading-relaxed flex-1 line-clamp-3">
-              {app.description}
-            </p>
-
-            {/* Action */}
-            {app.joined ? (
-              <a
-                href={app.launchUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-auto inline-flex items-center justify-center gap-1.5 bg-f-orange hover:bg-f-orange-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-orange-500/25"
-              >
-                Open app
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
-                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </a>
-            ) : (
-              <button
-                onClick={() => handleJoin(app.slug)}
-                disabled={joiningSlug === app.slug}
-                className="mt-auto inline-flex items-center justify-center gap-1.5 border border-f-border-bright hover:border-f-orange text-f-muted hover:text-f-orange text-xs font-semibold px-4 py-2.5 rounded-xl transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-              >
-                {joiningSlug === app.slug ? (
-                  <>
-                    <svg className="animate-spin" width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden>
-                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" />
-                      <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
-                    </svg>
-                    Joining…
-                  </>
-                ) : (
-                  <>
-                    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>
-                      <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                    </svg>
-                    Add to Famalii
-                  </>
-                )}
-              </button>
-            )}
           </div>
         ))}
       </div>
