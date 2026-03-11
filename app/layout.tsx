@@ -80,8 +80,15 @@ export default function RootLayout({
                   >
                     Apps
                   </a>
+                  <a
+                    href="/settings"
+                    className="text-sm text-f-muted hover:text-f-text transition-colors px-3 py-2 rounded-lg hover:bg-f-raised"
+                  >
+                    Settings
+                  </a>
                   <div className="ml-2">
                     <UserButton
+                      userProfileUrl="/settings"
                       appearance={{
                         variables: { colorPrimary: '#f97316' },
                         elements: { avatarBox: 'ring-2 ring-f-border hover:ring-f-orange transition-all' },
