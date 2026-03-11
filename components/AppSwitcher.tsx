@@ -21,6 +21,7 @@ export function AppSwitcher({ apps: initialApps }: Props) {
   // Optimistic local copy — avoids full page reload flash on join
   const [apps, setApps] = useState(initialApps)
   const [joiningSlug, setJoiningSlug] = useState<string | null>(null)
+  const [leavingSlug, setLeavingSlug] = useState<string | null>(null)
   const [toasts, setToasts] = useState<Toast[]>([])
 
   // Keep in sync when server re-renders (e.g. after router.refresh())
@@ -59,6 +60,35 @@ export function AppSwitcher({ apps: initialApps }: Props) {
       addToast('Network error — please try again', 'error')
     } finally {
       setJoiningSlug(null)
+    }
+  }
+
+  async function handleLeave(slug: string) {
+    setLeavingSlug(slug)
+    // Optimistically flip back to not-joined
+    setApps((prev) =>
+      prev.map((a) => a.slug === slug ? { ...a, joined: false, role: null } : a)
+    )
+    try {
+      const res = await fetch('/api/apps/leave', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ appSlug: slug }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setApps(initialApps)
+        addToast(data.error ?? 'Failed to remove app', 'error')
+        return
+      }
+      const appName = apps.find((a) => a.slug === slug)?.name ?? 'App'
+      addToast(`${appName} removed from your workspace`, 'success')
+      router.refresh()
+    } catch {
+      setApps(initialApps)
+      addToast('Network error — please try again', 'error')
+    } finally {
+      setLeavingSlug(null)
     }
   }
 
@@ -109,9 +139,28 @@ export function AppSwitcher({ apps: initialApps }: Props) {
                 : 'border-f-border bg-f-surface hover:border-f-border-bright'
             }`}
           >
-            {/* Joined indicator */}
+            {/* Joined indicator + remove button */}
             {app.joined && (
-              <span className="absolute top-4 right-4 w-2 h-2 rounded-full bg-f-orange shadow-lg shadow-orange-500/50" />
+              <div className="absolute top-3 right-3 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-f-orange shadow-lg shadow-orange-500/50" />
+                <button
+                  onClick={() => handleLeave(app.slug)}
+                  disabled={leavingSlug === app.slug}
+                  title={`Remove ${app.name} from your workspace`}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity w-5 h-5 rounded-md flex items-center justify-center text-f-faint hover:text-red-400 hover:bg-red-500/10 disabled:opacity-30"
+                >
+                  {leavingSlug === app.slug ? (
+                    <svg className="animate-spin" width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden>
+                      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" strokeOpacity="0.3" />
+                      <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
+                    </svg>
+                  ) : (
+                    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden>
+                      <path d="M3 3l10 10M13 3L3 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    </svg>
+                  )}
+                </button>
+              </div>
             )}
 
             {/* Icon + name */}
