@@ -201,7 +201,7 @@ export function AppSwitcher({ apps: initialApps }: Props) {
                   href={app.launchUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-auto w-full inline-flex items-center justify-center gap-1.5 bg-f-orange hover:bg-f-orange-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-orange-500/30"
+                  className="mt-auto w-full inline-flex items-center justify-center gap-1.5 bg-f-orange hover:bg-f-orange-dark text-f-blue text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-emerald-400/30"
                 >
                   Open app
                   <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden>

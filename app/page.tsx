@@ -108,9 +108,9 @@ export default async function HomePage() {
       <section className="relative overflow-hidden dot-grid">
         {/* Multi-layer glow */}
         <div aria-hidden className="pointer-events-none absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 90% 60% at 50% -5%, rgba(249,115,22,0.18) 0%, transparent 65%)' }} />
+          style={{ background: 'radial-gradient(ellipse 90% 60% at 50% -5%, rgba(158,234,175,0.18) 0%, transparent 65%)' }} />
         <div aria-hidden className="pointer-events-none absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-20"
-          style={{ background: 'radial-gradient(circle, rgba(249,115,22,0.3) 0%, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(circle, rgba(158,234,175,0.3) 0%, transparent 70%)' }} />
         <div aria-hidden className="pointer-events-none absolute -top-20 -right-20 w-[400px] h-[400px] rounded-full opacity-10"
           style={{ background: 'radial-gradient(circle, rgba(139,92,246,0.4) 0%, transparent 70%)' }} />
 
@@ -128,7 +128,7 @@ export default async function HomePage() {
             One identity.
             <br />
             <span style={{
-              background: 'linear-gradient(135deg, #f97316 0%, #fb923c 45%, #fbbf24 100%)',
+              background: 'linear-gradient(135deg, #9EEAAF 0%, #c5f3d0 50%, #ffffff 100%)',
               WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
             }}>
               Every Famalii app.
@@ -144,7 +144,7 @@ export default async function HomePage() {
           {/* CTAs */}
           <div className="animate-fade-up-delay-3 flex flex-col sm:flex-row items-center justify-center gap-3">
             <SignUpButton>
-              <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-f-orange hover:bg-f-orange-dark text-white font-bold px-9 py-4 rounded-xl text-base transition-all shadow-xl hover:shadow-orange-500/30 hover:-translate-y-0.5">
+              <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-f-orange hover:bg-f-orange-dark text-f-blue font-bold px-9 py-4 rounded-xl text-base transition-all shadow-xl hover:shadow-emerald-400/30 hover:-translate-y-0.5">
                 Get started free
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
@@ -355,7 +355,7 @@ export default async function HomePage() {
       <section className="relative overflow-hidden">
         <div aria-hidden className="pointer-events-none absolute inset-0 dot-grid opacity-30" />
         <div aria-hidden className="pointer-events-none absolute inset-0"
-          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(249,115,22,0.12) 0%, transparent 70%)' }} />
+          style={{ background: 'radial-gradient(ellipse 80% 60% at 50% 100%, rgba(158,234,175,0.12) 0%, transparent 70%)' }} />
         <div className="relative max-w-3xl mx-auto px-6 py-28 text-center">
           <p className="text-xs uppercase tracking-widest text-f-orange font-semibold mb-4">Join the platform</p>
           <h2 className="text-4xl sm:text-5xl font-black text-f-text mb-5 leading-tight">
@@ -366,7 +366,7 @@ export default async function HomePage() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <SignUpButton>
-              <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-f-orange hover:bg-f-orange-dark text-white font-bold px-10 py-4 rounded-xl text-base transition-all shadow-xl hover:shadow-orange-500/30 hover:-translate-y-0.5">
+              <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-f-orange hover:bg-f-orange-dark text-f-blue font-bold px-10 py-4 rounded-xl text-base transition-all shadow-xl hover:shadow-emerald-400/30 hover:-translate-y-0.5">
                 Create your account
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
                   <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />

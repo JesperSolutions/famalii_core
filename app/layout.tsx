@@ -7,10 +7,15 @@ import {
   UserButton,
 } from '@clerk/nextjs'
 import { ui } from '@clerk/ui'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { DM_Sans, Geist_Mono } from 'next/font/google'
+import { FamaliiLogo } from '@/components/FamaliiLogo'
 import './globals.css'
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
+const dmSans = DM_Sans({
+  variable: '--font-dm-sans',
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+})
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] })
 
 export const metadata: Metadata = {
@@ -20,26 +25,26 @@ export const metadata: Metadata = {
 
 const clerkAppearance = {
   variables: {
-    colorBackground:      '#131318',
-    colorInputBackground: '#1a1a22',
+    colorBackground:      '#11141f',
+    colorInputBackground: '#181b29',
     colorInputText:       '#eeeef2',
     colorText:            '#eeeef2',
-    colorTextSecondary:   '#8888a2',
-    colorPrimary:         '#f97316',
+    colorTextSecondary:   '#8a93ab',
+    colorPrimary:         '#9EEAAF',
     colorDanger:          '#ef4444',
     borderRadius:         '0.75rem',
-    fontFamily:           'var(--font-geist-sans), system-ui, sans-serif',
+    fontFamily:           'var(--font-dm-sans), "DM Sans", system-ui, sans-serif',
   },
   elements: {
     card:                      'shadow-2xl',
-    socialButtonsBlockButton:  'border-[#363645] bg-[#1a1a22] hover:bg-[#252530] text-[#eeeef2] transition-colors',
-    dividerLine:               'bg-[#252530]',
-    dividerText:               'text-[#525268]',
-    footerActionLink:          'text-[#f97316] hover:text-[#fb923c]',
-    formFieldInput:            'border-[#363645] focus:border-[#f97316] transition-colors',
+    socialButtonsBlockButton:  'border-[#363c52] bg-[#181b29] hover:bg-[#252a3a] text-[#eeeef2] transition-colors',
+    dividerLine:               'bg-[#252a3a]',
+    dividerText:               'text-[#525a73]',
+    footerActionLink:          'text-[#9EEAAF] hover:text-[#c5f3d0]',
+    formFieldInput:            'border-[#363c52] focus:border-[#9EEAAF] transition-colors',
     headerTitle:               'text-[#eeeef2] font-bold',
-    headerSubtitle:            'text-[#8888a2]',
-    formButtonPrimary:         'bg-[#f97316] hover:bg-[#ea580c] transition-colors',
+    headerSubtitle:            'text-[#8a93ab]',
+    formButtonPrimary:         'bg-[#9EEAAF] hover:bg-[#7cd896] text-[#192E5B] font-semibold transition-colors',
   },
 }
 
@@ -48,7 +53,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider appearance={clerkAppearance} ui={ui}>
-      <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`}>
+      <html lang="en" className={`${dmSans.variable} ${geistMono.variable}`}>
         <body className="antialiased min-h-screen bg-f-bg text-f-text flex flex-col">
 
           {/* ── Top navigation ─────────────────────────────── */}
@@ -57,12 +62,10 @@ export default function RootLayout({
 
               {/* Logo */}
               <a href="/" className="flex items-center gap-2.5 group">
-                <div className="w-8 h-8 rounded-lg bg-f-orange flex items-center justify-center shadow-lg group-hover:bg-f-orange-dark transition-colors">
-                  <span className="text-white font-black text-sm leading-none">F</span>
+                <div className="w-8 h-8 rounded-lg bg-f-blue flex items-center justify-center shadow-lg ring-1 ring-f-border group-hover:ring-f-orange/40 transition-all">
+                  <FamaliiLogo variant="symbol" tone="light" className="w-4 h-4" />
                 </div>
-                <span className="text-[15px] font-bold text-f-text tracking-tight">
-                  Famalii
-                </span>
+                <FamaliiLogo variant="full" tone="light" className="text-[15px] text-f-text" />
               </a>
 
               {/* Nav links + auth */}
@@ -90,7 +93,7 @@ export default function RootLayout({
                     <UserButton
                       userProfileUrl="/settings"
                       appearance={{
-                        variables: { colorPrimary: '#f97316' },
+                        variables: { colorPrimary: '#9EEAAF' },
                         elements: { avatarBox: 'ring-2 ring-f-border hover:ring-f-orange transition-all' },
                       }}
                     />
@@ -104,7 +107,7 @@ export default function RootLayout({
                     </button>
                   </SignInButton>
                   <SignUpButton>
-                    <button className="ml-1 text-sm text-white bg-f-orange hover:bg-f-orange-dark transition-colors px-4 py-2 rounded-lg font-semibold shadow-lg hover:shadow-orange-500/20">
+                    <button className="ml-1 text-sm text-f-blue bg-f-orange hover:bg-f-orange-dark transition-colors px-4 py-2 rounded-lg font-bold shadow-lg shadow-emerald-500/10 hover:shadow-emerald-400/20">
                       Get started
                     </button>
                   </SignUpButton>
@@ -119,8 +122,8 @@ export default function RootLayout({
           <footer className="border-t border-f-border mt-24 py-8 px-6">
             <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-f-faint">
               <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded-md bg-f-orange flex items-center justify-center">
-                  <span className="text-white font-black text-[10px]">F</span>
+                <div className="w-5 h-5 rounded-md bg-f-blue flex items-center justify-center">
+                  <FamaliiLogo variant="symbol" tone="light" className="w-2.5 h-2.5" />
                 </div>
                 <span>Famalii © {new Date().getFullYear()}</span>
               </div>

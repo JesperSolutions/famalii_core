@@ -51,7 +51,7 @@ export async function AppsSection({ userId }: { userId: string }) {
                 rel="noopener noreferrer"
                 className="group flex items-center gap-2.5 rounded-xl border border-f-border bg-f-surface hover:border-f-orange/40 hover:bg-f-orange/5 px-4 py-2.5 transition-all"
               >
-                <div className="w-6 h-6 rounded-md bg-f-orange flex items-center justify-center text-white text-[11px] font-black flex-shrink-0 shadow-sm shadow-orange-500/30">
+                <div className="w-6 h-6 rounded-md bg-f-orange flex items-center justify-center text-f-blue text-[11px] font-black flex-shrink-0 shadow-sm shadow-emerald-400/30">
                   {app.iconPlaceholder}
                 </div>
                 <span className="text-sm font-semibold text-f-muted group-hover:text-f-text transition-colors">{app.name}</span>

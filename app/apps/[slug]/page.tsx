@@ -34,7 +34,7 @@ export default async function AppPage({ params }: Props) {
       {/* App hero card */}
       <div className="rounded-2xl border border-f-border bg-f-surface p-8 mb-6">
         <div className="flex items-start gap-5 mb-6">
-          <div className="w-16 h-16 rounded-2xl bg-f-orange flex items-center justify-center text-3xl font-black text-white shadow-lg shadow-orange-500/20 flex-shrink-0">
+          <div className="w-16 h-16 rounded-2xl bg-f-orange flex items-center justify-center text-3xl font-black text-f-blue shadow-lg shadow-emerald-400/20 flex-shrink-0">
             {app.name.charAt(0)}
           </div>
           <div>
@@ -57,7 +57,7 @@ export default async function AppPage({ params }: Props) {
           href={app.launchUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 bg-f-orange hover:bg-f-orange-dark text-white font-bold px-6 py-3 rounded-xl text-sm transition-all shadow-lg hover:shadow-orange-500/25 hover:-translate-y-0.5"
+          className="inline-flex items-center gap-2 bg-f-orange hover:bg-f-orange-dark text-f-blue font-bold px-6 py-3 rounded-xl text-sm transition-all shadow-lg hover:shadow-emerald-400/25 hover:-translate-y-0.5"
         >
           Open {app.name}
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden>

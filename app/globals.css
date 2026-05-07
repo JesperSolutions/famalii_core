@@ -1,24 +1,35 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-dm-sans);
   --font-mono: var(--font-geist-mono);
 
-  /* ── Famalii colour tokens ──────────────────────────── */
-  --color-f-bg:            #0b0b0e;
-  --color-f-surface:       #131318;
-  --color-f-raised:        #1a1a22;
-  --color-f-elevated:      #22222c;
-  --color-f-border:        #252530;
-  --color-f-border-bright: #363645;
+  /* ── Famalii colour tokens (official brand) ──────────
+     Brand Blue  #192E5B   Brand Green #9EEAAF
+     The historical `f-orange*` token names are kept as
+     semantic accent slots and now resolve to brand green. */
 
-  --color-f-orange:        #f97316;
-  --color-f-orange-light:  #fb923c;
-  --color-f-orange-dark:   #ea580c;
+  /* Surfaces — slight navy tint to nod to brand blue */
+  --color-f-bg:            #0a0c14;
+  --color-f-surface:       #11141f;
+  --color-f-raised:        #181b29;
+  --color-f-elevated:      #1f2333;
+  --color-f-border:        #252a3a;
+  --color-f-border-bright: #363c52;
+
+  /* Accent (semantic primary) — brand green */
+  --color-f-orange:        #9EEAAF;
+  --color-f-orange-light:  #c5f3d0;
+  --color-f-orange-dark:   #7cd896;
+
+  /* Brand navy — used for buttons-text-on-green and badges */
+  --color-f-blue:          #192E5B;
+  --color-f-blue-light:    #2a4480;
+  --color-f-blue-dark:     #0f1d3d;
 
   --color-f-text:          #eeeef2;
-  --color-f-muted:         #8888a2;
-  --color-f-faint:         #525268;
+  --color-f-muted:         #8a93ab;
+  --color-f-faint:         #525a73;
 }
 
 *, *::before, *::after {
@@ -30,27 +41,30 @@ html {
 }
 
 body {
-  background-color: #0b0b0e;
+  background-color: #0a0c14;
   color: #eeeef2;
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-dm-sans), 'DM Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 /* ── Custom scrollbar ───────────────────────────────────── */
 ::-webkit-scrollbar            { width: 6px; height: 6px; }
-::-webkit-scrollbar-track      { background: #0b0b0e; }
-::-webkit-scrollbar-thumb      { background: #252530; border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover{ background: #363645; }
+::-webkit-scrollbar-track      { background: #0a0c14; }
+::-webkit-scrollbar-thumb      { background: #252a3a; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover{ background: #363c52; }
 
-/* ── Orange glow utility ────────────────────────────────── */
+/* ── Brand glow (was orange — now brand green) ──────────── */
 .glow-orange {
-  box-shadow: 0 0 0 1px rgba(249,115,22,0.35), 0 0 20px rgba(249,115,22,0.12);
+  box-shadow: 0 0 0 1px rgba(158,234,175,0.35), 0 0 24px rgba(158,234,175,0.15);
+}
+.glow-blue {
+  box-shadow: 0 0 0 1px rgba(25,46,91,0.6), 0 0 24px rgba(42,68,128,0.25);
 }
 
-/* ── Dot-grid hero pattern ──────────────────────────────── */
+/* ── Dot-grid hero pattern (subtle navy) ────────────────── */
 .dot-grid {
-  background-image: radial-gradient(circle, rgba(249,115,22,0.07) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(158,234,175,0.06) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
